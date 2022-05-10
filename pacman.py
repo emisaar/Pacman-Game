@@ -1,4 +1,7 @@
-"""Pacman, classic arcade game.
+"""
+Game: Pacman (May 10th, 2022)
+Student 1: Alejandro Díaz Villagómez | A01276769
+Student 2: Emiliano Saucedo Arriola | A01659258
 
 Exercises
 

@@ -5,11 +5,11 @@ Student 2: Emiliano Saucedo Arriola | A01659258
 
 Exercises
 
-1. Change the board. [DONE by Emiliano]
-    2. Change the number of ghosts. [DONE by Emiliano]
-    3. Change where pacman starts. [DONE by Emiliano]
-4. Make the ghosts faster/slower.
-5. Make the ghosts smarter.
+1. Change the board. [DONE BY EMILIANO]
+    1.1. Change the number of ghosts. [DONE BY EMILIANO]
+    1.2. Change where pacman starts. [DONE BY EMILIANO]
+2. Make the ghosts faster/slower. [DONE BY ALEJANDRO]
+3. Make the ghosts smarter. [DONE BY ALEJANDRO]
 """
 
 from random import choice
@@ -21,13 +21,13 @@ state = {'score': 0}
 path = Turtle(visible=False)
 writer = Turtle(visible=False)
 aim = vector(5, 0)
-pacman = vector(-20, 40) # Original value (-40, -80)
+pacman = vector(-20, 40)  # Original value (-40, -80)
 ghosts = [
-    [vector(-160, 120), vector(5, 0)], # Top left
-    [vector(-120, -120), vector(0, 5)], # Down left
-    [vector(100, 140), vector(0, -5)], # Top right
-    [vector(100, -160), vector(-5, 0)], # Down right
-    [vector(-40, 0), vector(-5, 0)], # Middle
+    [vector(-160, 120), vector(5, 0)],  # Top left
+    [vector(-120, -120), vector(0, 5)],  # Down left
+    [vector(100, 140), vector(0, -5)],  # Top right
+    [vector(100, -160), vector(-5, 0)],  # Down right
+    [vector(-40, 0), vector(-5, 0)],  # Middle
 ]
 
 # fmt: off
@@ -135,19 +135,26 @@ def move():
     goto(pacman.x + 10, pacman.y + 10)
     dot(20, 'yellow')
 
+    """Making ghosts smarter"""
     for point, course in ghosts:
         if valid(point + course):
             point.move(course)
-        else:
-            options = [
-                vector(5, 0),
-                vector(-5, 0),
-                vector(0, 5),
-                vector(0, -5),
-            ]
-            plan = choice(options)
-            course.x = plan.x
-            course.y = plan.y
+
+        if pacman.x > point.x:  # Pacman is on the right
+            if pacman.y > point.y:  # Pacman is on the TOP right. Ghosts should move right or up
+                options = [vector(5, 0), vector(0, 5)]
+            else:  # Pacman is on the BOTTOM right. Ghosts should move right or down
+                options = [vector(5, 0), vector(0, -5)]
+
+        else:  # Pacman is on the left
+            if pacman.y > point.y:  # Pacman is on the TOP left. Ghosts should move left or up
+                options = [vector(-5, 0), vector(0, 5)]
+            else:  # Pacman is on the BOTTOM left. Ghosts should move left or down
+                options = [vector(-5, 0), vector(0, -5)]
+
+        plan = choice(options)
+        course.x = plan.x
+        course.y = plan.y
 
         up()
         goto(point.x + 10, point.y + 10)
@@ -158,9 +165,9 @@ def move():
     for point, course in ghosts:
         if abs(pacman - point) < 20:
             return
-    
-    # Modify velocity (faster/slower) --> Smaller number = Faster || Bigger number = Slower
-    ontimer(move, 50)
+
+    """Modifying speed"""
+    ontimer(move, 80)  # Smaller number = Faster || Bigger number = Slower
 
 
 def change(x, y):
